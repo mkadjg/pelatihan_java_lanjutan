@@ -52,6 +52,10 @@ public class GuruController {
 
         guruRepository.delete(guru);
         return null;
+
+
+
+
     }
 
 }
