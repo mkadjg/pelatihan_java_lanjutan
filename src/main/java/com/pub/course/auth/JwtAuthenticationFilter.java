@@ -5,6 +5,7 @@ import com.pub.course.exception.SkipFilterException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // check token expired
             if (claims.getExpiration().before(new Date())) {
-                response.setStatus(401);
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
                 response.getWriter().write("Token Expired!");
                 return;
             }
@@ -52,7 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (SkipFilterException e) {
             // the request skipped
         } catch (AuthorizationException ae) {
-            response.setStatus(401);
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.getWriter().write("User doesn't have access!");
             return;
         }
