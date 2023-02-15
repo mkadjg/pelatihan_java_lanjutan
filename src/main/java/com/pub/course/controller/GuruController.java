@@ -4,6 +4,13 @@ import com.pub.course.dto.GuruDto;
 import com.pub.course.model.Guru;
 import com.pub.course.repository.GuruRepository;
 import com.pub.course.service.SpreadsheetService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +30,10 @@ public class GuruController {
     @Autowired
     SpreadsheetService spreadsheetService;
 
+    @Operation(
+            summary = "Retrieve all teacher data",
+            security = { @SecurityRequirement(name = "bearer-key") }
+    )
     @GetMapping("/find-all")
     public Object findAll() {
         return guruRepository.findAll();

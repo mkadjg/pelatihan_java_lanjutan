@@ -36,8 +36,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Claims claims = getClaims(request, response);
 
             // check token expired
-            if (claims.getExpiration().after(new Date())) {
-                response.sendError(403, "Token Expired");
+            if (claims.getExpiration().before(new Date())) {
+                response.setStatus(401);
+                response.getWriter().write("Token Expired!");
+                return;
             }
 
             // check username
@@ -50,14 +52,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (SkipFilterException e) {
             // the request skipped
         } catch (AuthorizationException ae) {
-            response.sendError(401, "User doesn't have access");
+            response.setStatus(401);
+            response.getWriter().write("User doesn't have access!");
+            return;
         }
         filterChain.doFilter(request, response);
     }
 
     private Claims getClaims(HttpServletRequest request, HttpServletResponse response) throws SkipFilterException {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-
         if(authorizationHeader == null || !authorizationHeader.startsWith(jwtConfig.getPrefix())) {
             throw new SkipFilterException();
         }
@@ -85,9 +88,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private List<String> getAuthorities(Claims claims) throws AuthorizationException {
         @SuppressWarnings("unchecked")
         List<String> authorities = (List<String>) claims.get("authorities");
-        if (authorities.isEmpty()) {
-            throw new AuthorizationException();
-        }
         return authorities;
     }
 

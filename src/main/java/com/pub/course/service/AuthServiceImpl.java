@@ -35,7 +35,6 @@ public class AuthServiceImpl implements AuthService {
         }
 
         if (!PasswordHashUtil.generate(dto.getPassword()).equals(user.getPassword())) {
-            System.out.println(PasswordHashUtil.generate(dto.getPassword()));
             throw new BadCredentialsException("Invalid username or password");
         }
 

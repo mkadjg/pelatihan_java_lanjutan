@@ -18,6 +18,8 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
+                .components(new Components().addSecuritySchemes("bearer-key",
+                        new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))
                 .info(new Info().title("PUB Course API")
                         .description("")
                         .version("v0.0.1")
